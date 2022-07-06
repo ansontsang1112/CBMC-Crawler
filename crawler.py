@@ -72,7 +72,7 @@ def fetch_page(post_number: int):
     soup = BeautifulSoup(web_page, 'html.parser')
     tag_content_search = soup.find("meta", property="og:description")
 
-    formatted_content = str(tag_content_search).replace('<meta content="靠北麥塊 » cbmc.club › 檢視文章 • ', '').replace(
+    formatted_content = str(tag_content_search).replace('<meta content="麥塊匿名發文平台 » cbmc.club › 檢視文章 • ', '').replace(
         '" property="og:description"/>', '')
 
     if stop_code(formatted_content):
