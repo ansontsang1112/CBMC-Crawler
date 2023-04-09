@@ -26,7 +26,11 @@ def crawler():
 
     # Get article count
     dir_path = "articles"
-    init_count = 1
+
+    # Read from last_article.lock
+    last_query = open("last_article.lock", "r")
+    init_count = int(last_query.readline())
+    last_query.close()
     exception_post, articles = [], {}
 
     for path in os.listdir(dir_path):
@@ -62,6 +66,22 @@ def crawler():
     file_name = "articles.json"
     with open(dir_path + "/" + file_name, 'w') as json_file:
         json.dump(articles, json_file)
+
+    last_article = open("last_article.lock", "w")
+
+    if main.ENABLE_REDIS:
+        last_key, keys = "", []
+        for key in client.keys('*'):
+            keys.append(int(key.decode("utf-8").replace("'", "")))
+        keys.sort()
+        last_key = keys[-1:][0]
+        last_article.write(str(last_key))
+    else:
+        last_article.write(f"{count}")
+
+    last_article.close()
+
+    print("靠北麥塊爬蟲系統 | 已儲存最後搜尋文章到達 last_article.lock")
 
     if main.ENABLE_REDIS and client is not None:
         print("靠北麥塊爬蟲系統 | 已將所有文章儲存到 articles.json 及 REDIS")

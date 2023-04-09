@@ -2,7 +2,7 @@ import datetime
 import json
 import os
 import crawler as c
-import schedule
+import schedule as s
 import time
 from dotenv import load_dotenv
 
@@ -24,9 +24,14 @@ if __name__ == '__main__':
     c.crawler()
 
     # Get article from crawler in every 00:00
-    schedule.every().day.at("00:00").do(c.crawler)
+    s.every().day.at("00:00").do(c.crawler)
 
     while True:
         print(f"靠北麥塊爬蟲系統運作正常 | 現在時間為 {datetime.datetime.now()}")
-        schedule.run_pending()
+
+        f = open("hc.log", "a")
+        f.write(f"{datetime.datetime.now()} | I am still alive\n")
+        f.close()
+
+        s.run_pending()
         time.sleep(3600)
